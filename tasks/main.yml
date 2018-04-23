@@ -1,0 +1,45 @@
+---
+
+- name: Install packages
+  dnf:
+    name:
+      - hplip
+      - hplip-gui
+    state: present
+  become: yes  
+
+- name: Disable Browsing
+  lineinfile:
+    path: /etc/cups/cupsd.conf
+    regexp: "^Browsing "
+    line: "Browsing Off"
+    owner: root
+    group: lp
+    backup: yes
+    state: present
+  notify: restart_cups
+  become: yes
+
+- name: Disable BrowseLocalProtocols
+  lineinfile:
+    path: /etc/cups/cups-browsed.conf
+    regexp: "^BrowseLocalProtocols "
+    line: "BrowseLocalProtocols none"
+    owner: root
+    group: lp
+    backup: yes
+    state: present
+  notify: restart_cups
+  become: yes
+
+- name: Disable BrowseRemoteProtocols
+  lineinfile:
+    path: /etc/cups/cups-browsed.conf
+    regexp: "^BrowseRemoteProtocols "
+    line: "BrowseRemoteProtocols none"
+    owner: root
+    group: lp
+    backup: yes
+    state: present
+  notify: restart_cups_browsed
+  become: yes
